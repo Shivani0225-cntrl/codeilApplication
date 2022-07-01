@@ -1,0 +1,108 @@
+<!-- <link rel="stylesheet" href="/css/user_profile.css"> -->
+<link rel="stylesheet" href="<%= assetPath('css/user_profile.css') %>">
+<br>
+
+<h3>
+    <%= profile.name %>
+</h3>
+<% if(locals.user){ %>
+    <%= profile.email %>
+<% } %>
+<br><br>
+<% if(profile.avatar){ %>
+    <img src="<%= profile.avatar %>" width="150px" style="border-radius: 50%;">
+<% } %>
+
+<br>
+<br>
+
+<% if(locals.user){ %>
+   
+    <% if(locals.user && locals.user.id != profile.id){ %>
+        <a href="/friends/toggle-friend/<%= profile._id %>" class="btn btn-info" role="button">
+            <% if(isFriend){ %>
+                Unfriend 
+            <% }else{ %>
+
+                <!-- for checking pending request -->
+
+                <% if(ispending){ %>
+                   Request Pending
+              <%  }else{ %>
+
+                Add Friend   
+
+
+                <% } %>
+                
+             
+            <% } %>
+        </a>
+        
+    <% } %>
+    <section>
+
+        <% if(locals.user.id == profile.id){ %>
+            <h6>Update Details :</h6>
+            <form action="/users/update/<%= profile.id %>" method="POST" enctype="multipart/form-data">
+                <input type="email" name="email" placeholder="Enter your email...." value="<%=profile.email %>"required>
+                <input type="text" name="name" placeholder="Enter your name...." value="<%=profile.name %>"required>
+                <input type="file" name = "avatar" placeholder="profile-pic">
+                <!-- <input type="submit" value="Update Details"> -->
+                <div style="margin-top: 1rem;">
+                    <button type="submit" class="btn btn-primary" value="Update">Update</button>
+                </div>
+            </form>
+        <% } %>
+    </section>    
+<% } %>
+
+<br>
+<br>
+
+<section>
+    <h2 class="he">Posts by <%= profile.name %>:</h2>
+    <ul>
+        <% for(post of profile.posts){ %>
+            <li style="list-style: none;" class="profile-post">
+                <% if(profile.avatar){ %>
+                    <img src="<%= profile.avatar %>" width="30px" style="border-radius: 50%;">
+                <% } %>
+                
+                <small><%= profile.name %></small>
+                <% if(locals.user && profile.id == locals.user.id){ %>
+                    <a class="delete-post-button" href="/posts/destroy/<%= post.id %>">Delete</a>
+                <% } %>
+                <br><br>
+                <%- post.content %><br>
+               
+                <div>
+                    <% if(post.uploadPic[0]){ %>
+                        <% for(var i=0; i<5; i++) { %>
+                            <% if(post.uploadPic[i]){ %>
+                                <img src="<%= post.uploadPic[i] %>" alt="USER PIC" width="300">
+                            <% } %>
+                        <% } %>
+                    <% } %>
+                </div>
+                <ul>
+                    <% for(comment of post.comments){ %>
+                        <li>
+                            <!-- <p><%= comment.content %></p>
+                            <p><%= comment.user.name %></p>                            
+                            <p><%= comment.user.avatar %></p> -->
+                            
+                              <%- include('_comment.ejs') -%>
+                        </li>
+                    <% } %>
+                </ul>
+            </li><br><br>
+        <% } %>
+    </ul>
+  
+  
+</section>    
+
+<br>
+<br>
+

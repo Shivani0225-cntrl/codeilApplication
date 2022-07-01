@@ -1,0 +1,71 @@
+<!-- <link rel="stylesheet" href="/css/post.css"> -->
+<link rel="stylesheet" href="<%= assetPath('css/post.css') %>">
+<% if(locals.user) {%>
+<script src="https://cdn.ckeditor.com/4.9.1/standard/ckeditor.js"></script>
+<section id="feed-posts">
+    <h4>Posts</h4>
+    <form action="/posts/create-Post" id="new-post-form" method="POST" enctype="multipart/form-data">
+
+        <textarea name="content" class="form-control" id="postContent" placeholder="type here..." required></textarea>
+        <script>
+            CKEDITOR.replace( 'content' );
+        </script>
+        
+        <!-- <div class="form-group green-border-focus">
+            <textarea class="form-control" id="postContent" rows="7" name="content" placeholder="type here..."></textarea>
+        </div> -->
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="customFile" name="uploadPic" multiple='multiple' accept='image/*'>
+            <label class="custom-file-label" for="uploadPic">Upload Images...</label>
+        </div>
+       
+        <div style="margin-top: 2vh;">
+            <button type="submit" class="btn btn-primary">Post</button>
+        </div>
+        
+
+
+
+
+
+<!-- 
+        
+        <input type="file" name="uploadPic" multiple='multiple' accept='image/*' placeholder="uploadPic">
+        <input type="submit" value="Post"> -->
+    </form>
+</section>
+<% } %>
+<section id="allPost">
+    <div id="post-list-container">
+        <ul>
+            <% for(post of allposts){ %>    
+                <%- include('_post') -%>
+            <% } %>
+        </ul>
+    </div>
+</section>
+<br><br>
+<section id="all-user">
+<% if(locals.user){ %>
+    <section>
+        <% for(user of allusers){ %>
+            <a href="/users/profile/<%= user.id %>"><%= user.name %></a><br>
+        <% } %>
+    </section>
+<% } %>
+<br><br>
+</section>
+
+<section  class="chat">
+
+<%- include('_chat_box'); -%>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+<script src="/js/chat_engine.js"></script>
+<% if (locals.user){ %>
+<script>
+    new ChatEngine('user-chat-box', '<%= locals.user.email %>')
+</script>
+<% } %>
+
+</section>
